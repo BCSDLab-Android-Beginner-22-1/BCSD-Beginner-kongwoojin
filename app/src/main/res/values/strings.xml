@@ -7,4 +7,10 @@
     <string name="toast_message">Hello World!</string>
 
     <string name="random_info">Here is a random number between 0 and %d</string>
+
+    <string name="dialog_title">Choose one</string>
+    <string name="dialog_text">Click reset to reset count or click toast to show toast message</string>
+    <string name="dialog_reset">Reset</string>
+    <string name="dialog_dismiss">Dismiss</string>
+    <string name="dialog_toast">Toast</string>
 </resources>
