@@ -17,7 +17,7 @@ class SubActivity : AppCompatActivity() {
         val currentNumTextView: TextView = findViewById(R.id.current_num_text_view)
         val infoTextView: TextView = findViewById(R.id.info_text_view)
 
-        infoTextView.text = String.format(getString(R.string.random_info), countFromMain)
+        infoTextView.text = getString(R.string.random_info, countFromMain)
 
         currentNumTextView.text = randomNumber.toString()
 
