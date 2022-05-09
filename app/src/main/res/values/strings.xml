@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">My Application</string>
 
-    <string name="toast_button">Toast</string>
+    <string name="dialog_button">Dialog</string>
     <string name="count_button">Count</string>
     <string name="random_button">Random</string>
     <string name="toast_message">Hello World!</string>
