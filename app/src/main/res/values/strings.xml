@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="dialog_delete_title">Delete</string>
+    <string name="dialog_delete_message">Press button to delete</string>
+    <string name="dialog_delete_confirm">Delete</string>
+    <string name="dialog_delete_dismiss">Dismiss</string>
+
+    <string name="dialog_change_title">Change text</string>
+    <string name="dialog_change_confirm">Change</string>
+    <string name="dialog_change_dismiss">Dismiss</string>
+
+    <string name="name_add">+</string>
 </resources>
