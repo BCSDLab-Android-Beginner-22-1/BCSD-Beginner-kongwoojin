@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         nameAdapter.dataList = dataList
         recyclerView.apply {
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(this)
+            layoutManager = LinearLayoutManager(context)
             adapter = nameAdapter
         }
 
