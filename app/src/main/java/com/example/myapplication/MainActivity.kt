@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             if (addItemText.text.isNotBlank()) {
                 dataList.add(Names(addItemText.text.toString()))
                 addItemText.setText("")
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemInserted(adapter.itemCount)
             } else {
                 Toast.makeText(this, getString(R.string.name_empty), Toast.LENGTH_SHORT).show()
             }
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.dialog_delete_confirm)
                 ) { _, _ ->
                     dataList.removeAt(it)
-                    adapter.notifyDataSetChanged()
+                    adapter.notifyItemRemoved(it)
                 }
                 .setNegativeButton(
                     getString(R.string.dialog_delete_dismiss)
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                     val changeEditText: EditText = rootView.findViewById(R.id.change_edit_text)
                     if (changeEditText.text.isNotBlank()) {
                         dataList.set(it, Names(changeEditText.text.toString()))
-                        adapter.notifyDataSetChanged()
+                        adapter.notifyItemChanged(it)
                     } else {
                         Toast.makeText(this, getString(R.string.name_empty), Toast.LENGTH_SHORT).show()
                     }
