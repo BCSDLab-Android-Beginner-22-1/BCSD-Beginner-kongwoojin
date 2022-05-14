@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,9 +28,13 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         addItemButton.setOnClickListener {
-            dataList.add(Names(addItemText.text.toString()))
-            addItemText.setText("")
-            adapter.notifyDataSetChanged()
+            if (addItemText.text.isNotBlank()) {
+                dataList.add(Names(addItemText.text.toString()))
+                addItemText.setText("")
+                adapter.notifyDataSetChanged()
+            } else {
+                Toast.makeText(this, getString(R.string.name_empty), Toast.LENGTH_SHORT).show()
+            }
         }
 
         adapter.setOnClickListener {

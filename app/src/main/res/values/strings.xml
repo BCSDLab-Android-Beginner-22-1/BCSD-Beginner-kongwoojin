@@ -10,4 +10,5 @@
     <string name="dialog_change_dismiss">Dismiss</string>
 
     <string name="name_add">+</string>
+    <string name="name_empty">Please type name!</string>
 </resources>
