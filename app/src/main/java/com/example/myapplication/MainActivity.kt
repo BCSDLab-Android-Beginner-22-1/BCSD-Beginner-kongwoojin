@@ -66,8 +66,12 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.dialog_change_confirm)
                 ) { _, _ ->
                     val changeEditText: EditText = rootView.findViewById(R.id.change_edit_text)
-                    dataList.set(it, Names(changeEditText.text.toString()))
-                    adapter.notifyDataSetChanged()
+                    if (changeEditText.text.isNotBlank()) {
+                        dataList.set(it, Names(changeEditText.text.toString()))
+                        adapter.notifyDataSetChanged()
+                    } else {
+                        Toast.makeText(this, getString(R.string.name_empty), Toast.LENGTH_SHORT).show()
+                    }
                 }
                 .setNegativeButton(
                     getString(R.string.dialog_change_dismiss)
