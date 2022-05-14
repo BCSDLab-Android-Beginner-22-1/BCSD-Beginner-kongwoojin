@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                 ) { _, _ ->
                     val changeEditText: EditText = rootView.findViewById(R.id.change_edit_text)
                     if (changeEditText.text.isNotBlank()) {
-                        dataList.set(it, Names(changeEditText.text.toString()))
+                        dataList[it] = Names(changeEditText.text.toString())
                         adapter.notifyItemChanged(it)
                     } else {
                         Toast.makeText(this, getString(R.string.name_empty), Toast.LENGTH_SHORT).show()
