@@ -21,23 +21,23 @@ class MainActivity : AppCompatActivity() {
         val addItemText: EditText = findViewById(R.id.add_item_text)
         val addItemButton: Button = findViewById(R.id.add_item_button)
 
-        val adapter = NameAdapter()
-        adapter.dataList = dataList
+        val nameAdapter = NameAdapter()
+        nameAdapter.dataList = dataList
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = adapter
+        recyclerView.adapter = nameAdapter
 
         addItemButton.setOnClickListener {
             if (addItemText.text.isNotBlank()) {
                 dataList.add(Names(addItemText.text.toString()))
                 addItemText.setText("")
-                adapter.notifyItemInserted(adapter.itemCount)
+                nameAdapter.notifyItemInserted(nameAdapter.itemCount)
             } else {
                 Toast.makeText(this, getString(R.string.name_empty), Toast.LENGTH_SHORT).show()
             }
         }
 
-        adapter.setOnClickListener {
+        nameAdapter.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle(getString(R.string.dialog_delete_title))
                 .setMessage(getString(R.string.dialog_delete_message))
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.dialog_delete_confirm)
                 ) { _, _ ->
                     dataList.removeAt(it)
-                    adapter.notifyItemRemoved(it)
+                    nameAdapter.notifyItemRemoved(it)
                 }
                 .setNegativeButton(
                     getString(R.string.dialog_delete_dismiss)
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
             builder.show()
         }
 
-        adapter.setOnLongClickListener {
+        nameAdapter.setOnLongClickListener {
             val builder = AlertDialog.Builder(this)
             val inflater = this.layoutInflater
 
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                     val changeEditText: EditText = rootView.findViewById(R.id.change_edit_text)
                     if (changeEditText.text.isNotBlank()) {
                         dataList[it] = Names(changeEditText.text.toString())
-                        adapter.notifyItemChanged(it)
+                        nameAdapter.notifyItemChanged(it)
                     } else {
                         Toast.makeText(this, getString(R.string.name_empty), Toast.LENGTH_SHORT).show()
                     }
