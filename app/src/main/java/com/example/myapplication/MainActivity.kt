@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
         adapter.setOnLongClickListener {
             val builder = AlertDialog.Builder(this)
-            val inflater = this.layoutInflater;
+            val inflater = this.layoutInflater
 
             val rootView = inflater.inflate(R.layout.dialog_edit, null)
             builder.setTitle(getString(R.string.dialog_change_title))
