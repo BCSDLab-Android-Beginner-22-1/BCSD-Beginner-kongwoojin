@@ -23,9 +23,11 @@ class MainActivity : AppCompatActivity() {
 
         val nameAdapter = NameAdapter()
         nameAdapter.dataList = dataList
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = nameAdapter
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this)
+            adapter = nameAdapter
+        }
 
         addItemButton.setOnClickListener {
             if (addItemText.text.isNotBlank()) {
