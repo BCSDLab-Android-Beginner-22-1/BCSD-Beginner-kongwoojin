@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity() {
         nameAdapter.setOnLongClickListener {
             val builder = AlertDialog.Builder(this)
             val inflater = this.layoutInflater
-            val safePosition = it.adapterPosition
 
             val rootView = inflater.inflate(R.layout.dialog_edit, null)
             builder.setTitle(getString(R.string.dialog_change_title))
@@ -70,8 +69,8 @@ class MainActivity : AppCompatActivity() {
                 ) { _, _ ->
                     val changeEditText: EditText = rootView.findViewById(R.id.change_edit_text)
                     if (changeEditText.text.isNotBlank()) {
-                        dataList[safePosition] = Names(changeEditText.text.toString())
-                        nameAdapter.notifyItemChanged(safePosition)
+                        dataList[it] = Names(changeEditText.text.toString())
+                        nameAdapter.notifyItemChanged(it)
                     } else {
                         Toast.makeText(this, getString(R.string.name_empty), Toast.LENGTH_SHORT).show()
                     }

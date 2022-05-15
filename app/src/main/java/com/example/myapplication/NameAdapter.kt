@@ -22,7 +22,7 @@ class NameAdapter : RecyclerView.Adapter<NameAdapter.ViewHolder>() {
                 onClickListener.onClick(position)
             }
             nameTextView.setOnLongClickListener {
-                onLongClickListener.onLongClick(holder)
+                onLongClickListener.onLongClick(holder.adapterPosition)
                 return@setOnLongClickListener true
             }
         }
@@ -39,7 +39,7 @@ class NameAdapter : RecyclerView.Adapter<NameAdapter.ViewHolder>() {
     }
 
     interface OnLongClickListener {
-        fun onLongClick(holder: ViewHolder)
+        fun onLongClick(position: Int)
     }
 
     inline fun setOnClickListener(crossinline item: (Int) -> Unit) {
@@ -50,10 +50,10 @@ class NameAdapter : RecyclerView.Adapter<NameAdapter.ViewHolder>() {
         }
     }
 
-    inline fun setOnLongClickListener(crossinline item: (ViewHolder) -> Unit) {
+    inline fun setOnLongClickListener(crossinline item: (Int) -> Unit) {
         this.onLongClickListener = object : OnLongClickListener {
-            override fun onLongClick(holder: ViewHolder) {
-                item(holder)
+            override fun onLongClick(position: Int) {
+                item(position)
             }
         }
     }
