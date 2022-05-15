@@ -19,7 +19,7 @@ class NameAdapter : RecyclerView.Adapter<NameAdapter.ViewHolder>() {
         with(holder) {
             nameTextView.text = dataList[position].name
             nameTextView.setOnClickListener {
-                onClickListener.onClick(position)
+                onClickListener.onClick(holder.adapterPosition)
             }
             nameTextView.setOnLongClickListener {
                 onLongClickListener.onLongClick(holder.adapterPosition)
