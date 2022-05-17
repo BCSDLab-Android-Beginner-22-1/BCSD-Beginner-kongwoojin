@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class NumberFragment(private val position: Int, private val numberList: MutableList<Int>) : Fragment() {
+class NumberFragment() : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -16,7 +16,9 @@ class NumberFragment(private val position: Int, private val numberList: MutableL
         val rootView = inflater.inflate(R.layout.fragment_number, container, false)
         val numberText: TextView = rootView.findViewById(R.id.number_text)
 
-        numberText.text = numberList[position].toString()
+        val number = requireArguments().getInt("number")
+
+        numberText.text = number.toString()
 
         return rootView
     }

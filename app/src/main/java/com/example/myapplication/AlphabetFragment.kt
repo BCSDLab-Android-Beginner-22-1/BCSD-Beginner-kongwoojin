@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class AlphabetFragment(private val position: Int, private val alphabetList: MutableList<Char>) : Fragment() {
+class AlphabetFragment() : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -16,7 +16,9 @@ class AlphabetFragment(private val position: Int, private val alphabetList: Muta
         val rootView = inflater.inflate(R.layout.fragment_alphabet, container, false)
         val alphabetText: TextView = rootView.findViewById(R.id.alphabet_text)
 
-        alphabetText.text = alphabetList[position].toString()
+        val alphabet = requireArguments().getChar("alphabet")
+
+        alphabetText.text = alphabet.toString()
 
         return rootView
     }
