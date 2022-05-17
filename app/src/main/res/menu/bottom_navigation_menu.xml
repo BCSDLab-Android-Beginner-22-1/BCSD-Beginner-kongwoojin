@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_rainbow"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_rainbow"
+        android:title="@string/bottom_menu_rainbow" />
+
+    <item
+        android:id="@+id/menu_number"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_numbet"
+        android:title="@string/bottom_menu_number" />
+
+    <item
+        android:id="@+id/menu_alphabet"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_alphabet"
+        android:title="@string/bottom_menu_alphabet" />
+</menu>
