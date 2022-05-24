@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -21,8 +20,6 @@ const val notificationId = 1000
 class MainActivity : AppCompatActivity() {
     var currentCount = 0
 
-    private lateinit var countTextView: TextView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -30,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         val toastButton: Button = findViewById(R.id.toast_button)
         val countButton: Button = findViewById(R.id.count_button)
         val randomButton: Button = findViewById(R.id.random_button)
-        countTextView = findViewById(R.id.count_text_view)
+        val countTextView: TextView = findViewById(R.id.count_text_view)
 
         countTextView.text = currentCount.toString()
 
@@ -72,7 +69,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         val pendingIntent: PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            PendingIntent.getActivity(this, 0, intent,
+            PendingIntent.getActivity(
+                this, 0, intent,
                 PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
         } else {
