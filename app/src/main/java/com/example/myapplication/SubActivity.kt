@@ -20,10 +20,5 @@ class SubActivity : AppCompatActivity() {
         infoTextView.text = getString(R.string.random_info, countFromMain)
 
         currentNumTextView.text = randomNumber.toString()
-
-        val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra("count", randomNumber)
-        }
-        setResult(RESULT_OK, intent)
     }
 }

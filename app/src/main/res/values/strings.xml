@@ -7,4 +7,10 @@
     <string name="toast_message">Hello World!</string>
 
     <string name="random_info">Here is a random number between 0 and %d</string>
+
+    <string name="notification_channel_random">Random</string>
+    <string name="notification_channel_random_text">Random Channel</string>
+
+    <string name="notification_random_title">Random!</string>
+    <string name="notification_random_text">Click to check your number!</string>
 </resources>
