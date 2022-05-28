@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(getString(R.string.notification_random_title))
             .setContentText(getString(R.string.notification_random_text))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Need for api <= 25
