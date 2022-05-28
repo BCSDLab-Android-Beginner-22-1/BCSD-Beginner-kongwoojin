@@ -14,10 +14,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
-const val CHANNEL_ID = "notification_random"
-const val notificationId = 1000
-
 class MainActivity : AppCompatActivity() {
+    
+    companion object {
+        const val CHANNEL_ID = "notification_random"
+        const val notificationId = 1000
+    }
+
     var currentCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
