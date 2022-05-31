@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
                 finish()
             }
+            .setCancelable(false)
         builder.show()
     }
 
