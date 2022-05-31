@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="dialog_permission_title">Permission Required!</string>
+    <string name="dialog_permission_messsage">Press OK to allow permission!</string>
+    <string name="dialog_permission_ok">OK</string>
+    <string name="dialog_permission_cancel">Cancel</string>
 </resources>
