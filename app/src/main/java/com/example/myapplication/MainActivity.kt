@@ -7,6 +7,9 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
+import android.view.View
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -40,7 +43,6 @@ class MainActivity : AppCompatActivity() {
             getAudioFile()
         }
 
-
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
 
         musicAdapter.dataList = dataList
@@ -49,7 +51,6 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
             adapter = musicAdapter
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -83,6 +84,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAudioFile() {
+        Log.d("Test", "getAudioFile")
         val projection = arrayOf(
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ARTIST,
@@ -111,6 +113,15 @@ class MainActivity : AppCompatActivity() {
                 dataList.add(MusicData(title, artist, duration))
                 musicAdapter.notifyItemInserted(musicAdapter.itemCount)
             }
+        }
+        checkIsMusicEmpty()
+    }
+
+    private fun checkIsMusicEmpty() {
+        Log.d("Test", "checkIsMusicEmpty")
+        if (musicAdapter.itemCount != 0) {
+            val emptyTextView: TextView = findViewById(R.id.empty_text_view)
+            emptyTextView.visibility = View.GONE
         }
     }
 }
