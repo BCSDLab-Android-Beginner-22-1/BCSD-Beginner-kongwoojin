@@ -84,7 +84,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getAudioFile() {
-        Log.d("Test", "getAudioFile")
         val projection = arrayOf(
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ARTIST,
@@ -118,7 +117,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkIsMusicEmpty() {
-        Log.d("Test", "checkIsMusicEmpty")
         if (musicAdapter.itemCount != 0) {
             val emptyTextView: TextView = findViewById(R.id.empty_text_view)
             emptyTextView.visibility = View.GONE
