@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
 import java.util.concurrent.TimeUnit
@@ -28,7 +29,12 @@ class MusicAdapter : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
                 TimeUnit.MILLISECONDS.toMinutes(milliseconds) - TimeUnit.HOURS.toMinutes(hours)
             val seconds =
                 TimeUnit.MILLISECONDS.toSeconds(milliseconds) - TimeUnit.MINUTES.toSeconds(minutes)
-            val duration = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+
+            val duration = if (hours.toInt() != 0) {
+                String.format("%02d:%02d:%02d", hours, minutes, seconds)
+            } else {
+                String.format("%02d:%02d", minutes, seconds)
+            }
             durationTextView.text = duration
 
             val albumArt = if (position.albumArt != null) {
