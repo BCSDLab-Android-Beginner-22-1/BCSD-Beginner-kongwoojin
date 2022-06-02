@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
 import java.util.concurrent.TimeUnit
 
@@ -20,10 +19,10 @@ class MusicAdapter : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
-            val position = dataList[position]
-            titleTextView.text = position.title
-            artistTextView.text = position.artist
-            val milliseconds = position.duration
+            val item = dataList[position]
+            titleTextView.text = item.title
+            artistTextView.text = item.artist
+            val milliseconds = item.duration
             val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
             val minutes =
                 TimeUnit.MILLISECONDS.toMinutes(milliseconds) - TimeUnit.HOURS.toMinutes(hours)
@@ -37,8 +36,8 @@ class MusicAdapter : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
             }
             durationTextView.text = duration
 
-            val albumArt = if (position.albumArt != null) {
-                BitmapDrawable(itemView.resources, position.albumArt)
+            val albumArt = if (item.albumArt != null) {
+                BitmapDrawable(itemView.resources, item.albumArt)
             } else {
                 ResourcesCompat.getDrawable(itemView.resources, R.drawable.ic_no_album_art, null)
             }
