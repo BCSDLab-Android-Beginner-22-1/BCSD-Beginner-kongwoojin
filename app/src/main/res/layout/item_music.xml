@@ -5,22 +5,34 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
+    <ImageView
+        android:id="@+id/album_art_image"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:layout_margin="10sp"
+        android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10sp"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/artist_text_view"
+        app:layout_constraintStart_toEndOf="@id/album_art_image"
+        app:layout_constraintTop_toTopOf="@id/album_art_image" />
+
+    <TextView
         android:id="@+id/artist_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="10sp"
+        app:layout_constraintBottom_toBottomOf="@id/album_art_image"
         app:layout_constraintEnd_toStartOf="@id/duration_text_view"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/album_art_image"
         app:layout_constraintTop_toBottomOf="@id/title_text_view" />
 
     <TextView
@@ -28,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/album_art_image"
         app:layout_constraintStart_toEndOf="@id/artist_text_view"
         app:layout_constraintTop_toBottomOf="@id/title_text_view" />
 

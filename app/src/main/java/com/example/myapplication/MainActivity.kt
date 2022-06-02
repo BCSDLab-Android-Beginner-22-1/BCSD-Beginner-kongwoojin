@@ -1,13 +1,16 @@
 package com.example.myapplication
 
 import android.Manifest
+import android.content.ContentUris
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
-import android.util.Log
+import android.util.Size
 import android.view.View
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,6 +19,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.io.FileNotFoundException
+import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
@@ -85,6 +90,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun getAudioFile() {
         val projection = arrayOf(
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.ALBUM_ID,
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.DURATION
@@ -101,15 +108,49 @@ class MainActivity : AppCompatActivity() {
         )
 
         cursor?.use {
+            val idColumn = cursor.getColumnIndex(MediaStore.Audio.Media._ID)
+            val albumIdColumn = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
             val titleColumn = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)
             val artistColumn = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST)
             val durationColumn = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
 
             while (cursor.moveToNext()) {
+                val id = cursor.getLong(idColumn)
+                val albumId = cursor.getLong(albumIdColumn)
                 val title = cursor.getString(titleColumn)
                 val artist = cursor.getString(artistColumn)
                 val duration = cursor.getLong(durationColumn)
-                dataList.add(MusicData(title, artist, duration))
+                val uri = ContentUris.withAppendedId(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    id
+                )
+
+                var inputStream: InputStream? = null
+                val albumArt: Bitmap? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    try {
+                        this.contentResolver.loadThumbnail(uri, Size(200, 200), null)
+                    } catch (e: FileNotFoundException) {
+                        null
+                    }
+                } else {
+                    val albumUri = ContentUris.withAppendedId(
+                        Uri.parse("content://media/external/audio/albumart"),
+                        albumId
+                    )
+                    try {
+                        inputStream = this.contentResolver.openInputStream(albumUri)
+                        val option = BitmapFactory.Options()
+                        option.outWidth = 200
+                        option.outHeight = 200
+                        option.inSampleSize = 2
+                        BitmapFactory.decodeStream(inputStream, null, option)
+                    } catch (e: FileNotFoundException) {
+                        null
+                    }
+                }
+                inputStream?.close()
+
+                dataList.add(MusicData(title, artist, duration, albumArt))
                 musicAdapter.notifyItemInserted(musicAdapter.itemCount)
             }
         }
