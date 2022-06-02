@@ -97,8 +97,11 @@ class MainActivity : AppCompatActivity() {
             MediaStore.Audio.Media.DURATION
         )
 
-        val sortOrder = "${MediaStore.Files.FileColumns.DATE_MODIFIED} DESC"
-
+        val sortOrder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            "${MediaStore.Files.FileColumns.ARTIST}, ${MediaStore.Files.FileColumns.ALBUM}, CAST(${MediaStore.Files.FileColumns.CD_TRACK_NUMBER} AS INTEGER)"
+        } else {
+            "${MediaStore.Audio.AlbumColumns.ARTIST}, ${MediaStore.Audio.AlbumColumns.ALBUM}, CAST(${MediaStore.Audio.AudioColumns.TRACK} AS INTEGER)"
+        }
         val cursor = this.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
             projection,
