@@ -40,7 +40,7 @@ class MusicAdapter : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
             val albumArt = if (position.albumArt != null) {
                 BitmapDrawable(itemView.resources, position.albumArt)
             } else {
-                itemView.resources.getDrawable(R.drawable.ic_no_album_art)
+                ResourcesCompat.getDrawable(itemView.resources, R.drawable.ic_no_album_art, null)
             }
             albumArtImage.setImageDrawable(albumArt)
         }
