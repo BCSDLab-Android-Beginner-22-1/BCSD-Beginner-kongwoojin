@@ -161,7 +161,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkIsMusicEmpty() {
-        if (musicAdapter.itemCount != 0) {
+        /* musicAdapter.itemCount always return 0 on api 22.
+        * So, get item size from dataList on under api 23 */
+        
+        val musicItems = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            dataList.size
+        } else {
+            musicAdapter.itemCount
+        }
+
+        if (musicItems != 0) {
             val emptyTextView: TextView = findViewById(R.id.empty_text_view)
             emptyTextView.visibility = View.GONE
         }
