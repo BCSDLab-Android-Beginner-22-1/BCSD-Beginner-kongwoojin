@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
         val cursor = this.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
             projection,
-            null,
+            MediaStore.Audio.Media.IS_MUSIC,
             null,
             sortOrder
         )
