@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.FileNotFoundException
@@ -49,12 +50,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
+        val dividerItemDecoration = DividerItemDecoration(
+            recyclerView.context,
+            LinearLayoutManager(this).orientation
+        )
 
         musicAdapter.dataList = dataList
         recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context)
             adapter = musicAdapter
+            addItemDecoration(dividerItemDecoration)
         }
     }
 
