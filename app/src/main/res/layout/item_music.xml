@@ -31,21 +31,23 @@
 
     <TextView
         android:id="@+id/artist_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10sp"
+        android:ellipsize="end"
+        android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="@id/album_art_image"
         app:layout_constraintEnd_toStartOf="@id/duration_text_view"
-        app:layout_constraintStart_toEndOf="@id/album_art_image"
+        app:layout_constraintStart_toStartOf="@id/title_text_view"
         app:layout_constraintTop_toBottomOf="@id/title_text_view" />
 
     <TextView
         android:id="@+id/duration_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10sp"
+        android:layout_marginEnd="10sp"
         app:layout_constraintBottom_toBottomOf="@id/album_art_image"
-        app:layout_constraintStart_toEndOf="@id/artist_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title_text_view" />
 
 
