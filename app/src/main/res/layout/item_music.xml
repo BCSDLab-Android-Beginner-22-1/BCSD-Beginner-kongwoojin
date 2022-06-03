@@ -17,14 +17,15 @@
 
     <TextView
         android:id="@+id/title_text_view"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70sp"
+        android:layout_marginStart="10sp"
         android:layout_marginEnd="10sp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@id/artist_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/album_art_image"
         app:layout_constraintTop_toTopOf="@id/album_art_image" />
 
