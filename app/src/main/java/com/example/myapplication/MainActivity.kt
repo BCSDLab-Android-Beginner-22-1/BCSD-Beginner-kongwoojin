@@ -43,12 +43,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkPermission()
-        } else {
-            getAudioFile()
-        }
-
         val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
         val dividerItemDecoration = DividerItemDecoration(
             recyclerView.context,
@@ -61,6 +55,12 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
             adapter = musicAdapter
             addItemDecoration(dividerItemDecoration)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermission()
+        } else {
+            getAudioFile()
         }
     }
 
