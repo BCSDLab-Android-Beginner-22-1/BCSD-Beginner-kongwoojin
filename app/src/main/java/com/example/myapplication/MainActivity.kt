@@ -99,9 +99,9 @@ class MainActivity : AppCompatActivity() {
         )
 
         val sortOrder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            "${MediaStore.Files.FileColumns.ARTIST}, ${MediaStore.Files.FileColumns.ALBUM}, CAST(${MediaStore.Files.FileColumns.CD_TRACK_NUMBER} AS INTEGER)"
+            "${MediaStore.Files.FileColumns.ALBUM}, ${MediaStore.Files.FileColumns.ARTIST}, CAST(${MediaStore.Files.FileColumns.CD_TRACK_NUMBER} AS INTEGER)"
         } else {
-            "${MediaStore.Audio.AlbumColumns.ARTIST}, ${MediaStore.Audio.AlbumColumns.ALBUM}, CAST(${MediaStore.Audio.AudioColumns.TRACK} AS INTEGER)"
+            " ${MediaStore.Audio.AlbumColumns.ALBUM}, ${MediaStore.Audio.AlbumColumns.ARTIST}, CAST(${MediaStore.Audio.AudioColumns.TRACK} AS INTEGER)"
         }
         val cursor = this.contentResolver.query(
             MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
