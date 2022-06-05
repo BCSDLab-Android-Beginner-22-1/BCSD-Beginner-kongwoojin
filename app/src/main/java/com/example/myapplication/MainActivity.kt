@@ -3,14 +3,11 @@ package com.example.myapplication
 import android.Manifest
 import android.content.ContentUris
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
-import android.util.Size
 import android.view.View
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.io.FileNotFoundException
-import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
@@ -129,37 +124,20 @@ class MainActivity : AppCompatActivity() {
                 val title = cursor.getString(titleColumn)
                 val artist = cursor.getString(artistColumn)
                 val duration = cursor.getLong(durationColumn)
-                val uri = ContentUris.withAppendedId(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    id
-                )
 
-                var inputStream: InputStream? = null
-                val albumArt: Bitmap? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    try {
-                        this.contentResolver.loadThumbnail(uri, Size(200, 200), null)
-                    } catch (e: FileNotFoundException) {
-                        null
-                    }
+                val albumUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    ContentUris.withAppendedId(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        id
+                    )
                 } else {
-                    val albumUri = ContentUris.withAppendedId(
+                    ContentUris.withAppendedId(
                         Uri.parse("content://media/external/audio/albumart"),
                         albumId
                     )
-                    try {
-                        inputStream = this.contentResolver.openInputStream(albumUri)
-                        val option = BitmapFactory.Options()
-                        option.outWidth = 200
-                        option.outHeight = 200
-                        option.inSampleSize = 2
-                        BitmapFactory.decodeStream(inputStream, null, option)
-                    } catch (e: FileNotFoundException) {
-                        null
-                    }
                 }
-                inputStream?.close()
 
-                dataList.add(MusicData(title, artist, duration, albumArt))
+                dataList.add(MusicData(title, artist, duration, albumUri))
                 musicAdapter.notifyItemInserted(musicAdapter.itemCount)
             }
         }
