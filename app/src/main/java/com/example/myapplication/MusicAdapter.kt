@@ -31,19 +31,7 @@ class MusicAdapter : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
             val item = dataList[position]
             titleTextView.text = item.title
             artistTextView.text = item.artist
-            val milliseconds = item.duration
-            val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
-            val minutes =
-                TimeUnit.MILLISECONDS.toMinutes(milliseconds) - TimeUnit.HOURS.toMinutes(hours)
-            val seconds =
-                TimeUnit.MILLISECONDS.toSeconds(milliseconds) - TimeUnit.MINUTES.toSeconds(minutes)
-
-            val duration = if (hours.toInt() != 0) {
-                String.format("%02d:%02d:%02d", hours, minutes, seconds)
-            } else {
-                String.format("%02d:%02d", minutes, seconds)
-            }
-            durationTextView.text = duration
+            durationTextView.text = getDuration(item.duration)
 
             val albumArt = getAlbumArt(itemView.context, itemView.resources, item.albumUri)
             albumArtImage.setImageDrawable(albumArt)
@@ -85,5 +73,20 @@ class MusicAdapter : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
         inputStream?.close()
 
         return albumArt
+    }
+
+    private fun getDuration(milliseconds: Long): String {
+        val hours = TimeUnit.MILLISECONDS.toHours(milliseconds)
+        val minutes =
+            TimeUnit.MILLISECONDS.toMinutes(milliseconds) - TimeUnit.HOURS.toMinutes(hours)
+        val seconds =
+            TimeUnit.MILLISECONDS.toSeconds(milliseconds) - TimeUnit.MINUTES.toSeconds(minutes)
+
+        val duration = if (hours.toInt() != 0) {
+            String.format("%02d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            String.format("%02d:%02d", minutes, seconds)
+        }
+        return duration
     }
 }
