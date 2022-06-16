@@ -53,7 +53,7 @@ class MusicAdapter : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
             try {
                 BitmapDrawable(
                     resources,
-                    context.contentResolver.loadThumbnail(albumUri, Size(100, 100), null)
+                    context.contentResolver.loadThumbnail(albumUri, Size(500, 500), null)
                 )
             } catch (e: FileNotFoundException) {
                 ResourcesCompat.getDrawable(resources, R.drawable.ic_no_album_art, null)
@@ -62,8 +62,8 @@ class MusicAdapter : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
             try {
                 inputStream = context.contentResolver.openInputStream(albumUri)
                 val option = BitmapFactory.Options()
-                option.outWidth = 100
-                option.outHeight = 100
+                option.outWidth = 500
+                option.outHeight = 500
                 option.inSampleSize = 2
                 BitmapDrawable(resources, BitmapFactory.decodeStream(inputStream, null, option))
             } catch (e: FileNotFoundException) {
