@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
 import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -33,12 +35,19 @@ class MainActivity : AppCompatActivity() {
 
     private val dataList = mutableListOf<MusicData>()
     private val musicAdapter = MusicAdapter()
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyTextView: TextView
+    private lateinit var permissionLayout: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val recyclerView: RecyclerView = findViewById(R.id.recycler_view)
+        emptyTextView = findViewById(R.id.empty_text_view)
+        recyclerView = findViewById(R.id.recycler_view)
+        permissionLayout = findViewById(R.id.permission_layout)
+        val permissionSettingButton: Button = findViewById(R.id.permission_settings_button)
+
         val dividerItemDecoration = DividerItemDecoration(
             recyclerView.context,
             LinearLayoutManager(this).orientation
@@ -57,6 +66,13 @@ class MainActivity : AppCompatActivity() {
         } else {
             getAudioFile()
         }
+
+        permissionSettingButton.setOnClickListener {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri: Uri = Uri.fromParts("package", packageName, null)
+            intent.data = uri
+            startActivity(intent)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -66,27 +82,28 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun permissionDialog(isDeniedOnce: Boolean) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle(getString(R.string.dialog_permission_title))
-            .setMessage(getString(R.string.dialog_permission_messsage))
-            .setPositiveButton(getString(R.string.dialog_permission_ok)) { _, _ ->
-                if (isDeniedOnce) {
+        if (isDeniedOnce) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.dialog_permission_title))
+                .setMessage(getString(R.string.dialog_permission_messsage))
+                .setPositiveButton(getString(R.string.dialog_permission_ok)) { _, _ ->
                     checkPermission()
-                } else {
-                    // Open application settings
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri: Uri = Uri.fromParts("package", packageName, null)
-                    intent.data = uri
-                    startActivity(intent)
                 }
+                .setNegativeButton(getString(R.string.dialog_permission_cancel)) { dialog, _ ->
+                    dialog.dismiss()
+                    showPermissionSettingsButton()
+                }
+                .setCancelable(false)
+            builder.show()
+        } else {
+            showPermissionSettingsButton()
+        }
+    }
 
-            }
-            .setNegativeButton(getString(R.string.dialog_permission_cancel)) { dialog, _ ->
-                dialog.dismiss()
-                finish()
-            }
-            .setCancelable(false)
-        builder.show()
+    private fun showPermissionSettingsButton() {
+        recyclerView.visibility = View.GONE
+        emptyTextView.visibility = View.GONE
+        permissionLayout.visibility = View.VISIBLE
     }
 
     private fun getAudioFile() {
@@ -146,7 +163,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkIsMusicEmpty() {
         if (musicAdapter.itemCount != 0) {
-            val emptyTextView: TextView = findViewById(R.id.empty_text_view)
             emptyTextView.visibility = View.GONE
         }
     }

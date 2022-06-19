@@ -5,4 +5,6 @@
     <string name="dialog_permission_messsage">Press OK to allow permission!</string>
     <string name="dialog_permission_ok">OK</string>
     <string name="dialog_permission_cancel">Cancel</string>
+    <string name="permission_needed">Allow permission to show files</string>
+    <string name="open_settings">Open Settings</string>
 </resources>
