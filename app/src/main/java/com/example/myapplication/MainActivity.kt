@@ -33,6 +33,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    private val startActivity =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            initView()
+            hidePermissionSettingsButton()
+        }
+
     private val dataList = mutableListOf<MusicData>()
     private val musicAdapter = MusicAdapter()
     private lateinit var recyclerView: RecyclerView
@@ -48,30 +54,13 @@ class MainActivity : AppCompatActivity() {
         permissionLayout = findViewById(R.id.permission_layout)
         val permissionSettingButton: Button = findViewById(R.id.permission_settings_button)
 
-        val dividerItemDecoration = DividerItemDecoration(
-            recyclerView.context,
-            LinearLayoutManager(this).orientation
-        )
-
-        musicAdapter.dataList = dataList
-        recyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(context)
-            adapter = musicAdapter
-            addItemDecoration(dividerItemDecoration)
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkPermission()
-        } else {
-            getAudioFile()
-        }
+        initView()
 
         permissionSettingButton.setOnClickListener {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             val uri: Uri = Uri.fromParts("package", packageName, null)
             intent.data = uri
-            startActivity(intent)
+            startActivity.launch(intent)
         }
     }
 
@@ -104,6 +93,11 @@ class MainActivity : AppCompatActivity() {
         recyclerView.visibility = View.GONE
         emptyTextView.visibility = View.GONE
         permissionLayout.visibility = View.VISIBLE
+    }
+
+    private fun hidePermissionSettingsButton() {
+        recyclerView.visibility = View.VISIBLE
+        permissionLayout.visibility = View.GONE
     }
 
     private fun getAudioFile() {
@@ -164,6 +158,27 @@ class MainActivity : AppCompatActivity() {
     private fun checkIsMusicEmpty() {
         if (musicAdapter.itemCount != 0) {
             emptyTextView.visibility = View.GONE
+        }
+    }
+
+    private fun initView() {
+        val dividerItemDecoration = DividerItemDecoration(
+            recyclerView.context,
+            LinearLayoutManager(this).orientation
+        )
+
+        musicAdapter.dataList = dataList
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = musicAdapter
+            addItemDecoration(dividerItemDecoration)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermission()
+        } else {
+            getAudioFile()
         }
     }
 }
