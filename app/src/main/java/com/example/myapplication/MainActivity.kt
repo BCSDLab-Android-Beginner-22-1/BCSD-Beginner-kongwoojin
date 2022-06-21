@@ -492,4 +492,24 @@ class MainActivity : AppCompatActivity() {
         unbindService(connectionResult)
         isBinding = false
     }
+
+    override fun onBackPressed() {
+        if (isSlideUp) {
+            val animSlideDown = TranslateAnimation(
+                Animation.RELATIVE_TO_PARENT, 0f,
+                Animation.RELATIVE_TO_PARENT, 0f,
+                Animation.RELATIVE_TO_PARENT, 0f,
+                Animation.RELATIVE_TO_PARENT, 1f
+            )
+            animSlideDown.duration = 300
+            animSlideDown.fillAfter = false
+
+            expandedLayout.animation = animSlideDown
+            expandedLayout.visibility = View.GONE
+            nowPlayingLayout.visibility = View.VISIBLE
+            isSlideUp = false
+        } else {
+            super.onBackPressed()
+        }
+    }
 }
