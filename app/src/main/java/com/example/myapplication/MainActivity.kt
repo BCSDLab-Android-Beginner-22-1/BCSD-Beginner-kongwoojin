@@ -24,12 +24,14 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                getAudioFile()
-            } else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                permissionDialog(true)
-            } else {
-                permissionDialog(false)
+            when (isGranted) {
+                true -> getAudioFile()
+                else -> {
+                    when (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        true -> permissionDialog(true)
+                        else -> permissionDialog(false)
+                    }
+                }
             }
         }
 
@@ -71,21 +73,22 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun permissionDialog(isDeniedOnce: Boolean) {
-        if (isDeniedOnce) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle(getString(R.string.dialog_permission_title))
-                .setMessage(getString(R.string.dialog_permission_messsage))
-                .setPositiveButton(getString(R.string.dialog_permission_ok)) { _, _ ->
-                    checkPermission()
-                }
-                .setNegativeButton(getString(R.string.dialog_permission_cancel)) { dialog, _ ->
-                    dialog.dismiss()
-                    showPermissionSettingsButton()
-                }
-                .setCancelable(false)
-            builder.show()
-        } else {
-            showPermissionSettingsButton()
+        when (isDeniedOnce) {
+            true -> {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle(getString(R.string.dialog_permission_title))
+                    .setMessage(getString(R.string.dialog_permission_messsage))
+                    .setPositiveButton(getString(R.string.dialog_permission_ok)) { _, _ ->
+                        checkPermission()
+                    }
+                    .setNegativeButton(getString(R.string.dialog_permission_cancel)) { dialog, _ ->
+                        dialog.dismiss()
+                        showPermissionSettingsButton()
+                    }
+                    .setCancelable(false)
+                builder.show()
+            }
+            else -> showPermissionSettingsButton()
         }
     }
 
