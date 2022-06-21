@@ -2,12 +2,10 @@ package com.example.myapplication
 
 import android.Manifest
 import android.content.ContentUris
-import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.Settings
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -35,8 +33,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-    private val startActivity =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    private val openSettings =
+        registerForActivityResult(OpenSettings()) {
             initView()
             hidePermissionSettingsButton()
         }
@@ -59,10 +57,7 @@ class MainActivity : AppCompatActivity() {
         initView()
 
         permissionSettingButton.setOnClickListener {
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri: Uri = Uri.fromParts("package", packageName, null)
-            intent.data = uri
-            startActivity.launch(intent)
+            openSettings.launch(null)
         }
     }
 
