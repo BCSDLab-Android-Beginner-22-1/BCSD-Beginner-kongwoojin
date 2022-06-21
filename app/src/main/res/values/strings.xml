@@ -7,4 +7,8 @@
     <string name="dialog_permission_cancel">Cancel</string>
     <string name="permission_needed">Allow permission to show files</string>
     <string name="open_settings">Open Settings</string>
+
+    <string name="title_placeholder">Title</string>
+    <string name="artist_placeholder">Artist</string>
+    <string name="time_placeholder">00:00</string>
 </resources>
