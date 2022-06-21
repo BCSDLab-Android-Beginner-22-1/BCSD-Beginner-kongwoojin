@@ -212,7 +212,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                waitUntilMusicEnd()
+                if (musicService.isPlaying())
+                    waitUntilMusicEnd()
             }
         })
     }
