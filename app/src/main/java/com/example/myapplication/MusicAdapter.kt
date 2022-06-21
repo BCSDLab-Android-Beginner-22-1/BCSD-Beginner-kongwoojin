@@ -33,7 +33,7 @@ class MusicAdapter : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
             artistTextView.text = item.artist
             durationTextView.text = getDuration(item.duration)
 
-            val albumArt = getAlbumArt(itemView.context, itemView.resources, item.albumUri)
+            val albumArt = getAlbumArt(itemView.context, itemView.resources, item.albumUri.toUri())
             albumArtImage.setImageDrawable(albumArt)
         }
     }
@@ -88,5 +88,9 @@ class MusicAdapter : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
             String.format("%02d:%02d", minutes, seconds)
         }
         return duration
+    }
+
+    fun String.toUri(): Uri {
+        return Uri.parse(this)
     }
 }

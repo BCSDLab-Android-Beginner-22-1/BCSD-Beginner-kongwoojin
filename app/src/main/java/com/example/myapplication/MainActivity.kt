@@ -1,8 +1,6 @@
 package com.example.myapplication
 
 import android.Manifest
-import android.content.ContentUris
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -135,15 +133,9 @@ class MainActivity : AppCompatActivity() {
                 val duration = cursor.getLong(durationColumn)
 
                 val albumUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    ContentUris.withAppendedId(
-                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                        id
-                    )
+                    "${MediaStore.Audio.Media.EXTERNAL_CONTENT_URI}/$id"
                 } else {
-                    ContentUris.withAppendedId(
-                        Uri.parse("content://media/external/audio/albumart"),
-                        albumId
-                    )
+                    "content://media/external/audio/albumart/$albumId"
                 }
 
                 dataList.add(MusicData(title, artist, duration, albumUri))
