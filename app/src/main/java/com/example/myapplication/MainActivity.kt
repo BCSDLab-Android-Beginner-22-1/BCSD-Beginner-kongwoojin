@@ -1,20 +1,37 @@
 package com.example.myapplication
 
 import android.Manifest
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.content.res.Resources
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.MediaStore
+import android.util.Size
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.*
+import java.io.FileNotFoundException
+import java.io.InputStream
+import java.util.concurrent.TimeUnit
+
 
 class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
@@ -37,11 +54,32 @@ class MainActivity : AppCompatActivity() {
             hidePermissionSettingsButton()
         }
 
+    lateinit var musicService: MusicService
+    private var isBinding = false
+    var job: Job? = null
+
+    private var connectionResult = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isBinding = false
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicService.MusicBinder
+            musicService = binder.getService()
+            isBinding = true
+            initView()
+        }
+    }
+
     private val dataList = mutableListOf<MusicData>()
     private val musicAdapter = MusicAdapter()
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyTextView: TextView
     private lateinit var permissionLayout: LinearLayout
+    private lateinit var nowArtistTextView: TextView
+    private lateinit var nowTitleTextView: TextView
+    private lateinit var nowAlbumArtImage: ImageView
+    private lateinit var playPauseButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,12 +88,95 @@ class MainActivity : AppCompatActivity() {
         emptyTextView = findViewById(R.id.empty_text_view)
         recyclerView = findViewById(R.id.recycler_view)
         permissionLayout = findViewById(R.id.permission_layout)
-        val permissionSettingButton: Button = findViewById(R.id.permission_settings_button)
+        nowAlbumArtImage = findViewById(R.id.now_album_art_image)
+        nowTitleTextView = findViewById(R.id.now_title_text_view)
+        nowArtistTextView = findViewById(R.id.now_artist_text_view)
 
-        initView()
+        val permissionSettingButton: Button = findViewById(R.id.permission_settings_button)
+        playPauseButton = findViewById(R.id.play_pause_button)
+
+        when (isBinding) {
+            true -> initView()
+            else -> initService()
+        }
 
         permissionSettingButton.setOnClickListener {
             openSettings.launch(null)
+        }
+
+        playPauseButton.setOnClickListener {
+            if (isBinding) {
+                musicService.playPauseMusic()
+                initPlayPauseButton()
+            }
+        }
+
+        musicAdapter.setOnClickListener {
+            setNowPlaying(it)
+        }
+    }
+
+    private fun initService() {
+        val intent = Intent(this, MusicService::class.java)
+        startService(intent)
+        bindService(intent, connectionResult, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun initView() {
+        if (isBinding) {
+            if (musicService.isPlaying()) {
+                initPlayingMusic()
+                waitUntilMusicEnd()
+            }
+
+            initPlayPauseButton()
+        }
+
+        val dividerItemDecoration = DividerItemDecoration(
+            recyclerView.context,
+            LinearLayoutManager(this).orientation
+        )
+
+        musicAdapter.dataList = dataList
+        recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context)
+            adapter = musicAdapter
+            addItemDecoration(dividerItemDecoration)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermission()
+        } else {
+            getAudioFile()
+        }
+    }
+
+    private fun initPlayingMusic() {
+        val nowMusic = musicService.nowMusic
+
+        val albumArt = getAlbumArt(this@MainActivity, resources, nowMusic.albumUri.toUri())
+        nowAlbumArtImage.setImageDrawable(albumArt)
+
+        nowTitleTextView.text = nowMusic.title
+        nowArtistTextView.text = nowMusic.artist
+    }
+
+
+    private fun initPlayPauseButton() {
+        when (musicService.isPlaying()) {
+            true -> playPauseButton.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    this,
+                    R.drawable.ic_pause
+                )
+            )
+            else -> playPauseButton.setImageDrawable(
+                AppCompatResources.getDrawable(
+                    this,
+                    R.drawable.ic_play
+                )
+            )
         }
     }
 
@@ -132,13 +253,15 @@ class MainActivity : AppCompatActivity() {
                 val artist = cursor.getString(artistColumn)
                 val duration = cursor.getLong(durationColumn)
 
+                val musicUri = "${MediaStore.Audio.Media.EXTERNAL_CONTENT_URI}/$id"
+
                 val albumUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     "${MediaStore.Audio.Media.EXTERNAL_CONTENT_URI}/$id"
                 } else {
                     "content://media/external/audio/albumart/$albumId"
                 }
 
-                dataList.add(MusicData(title, artist, duration, albumUri))
+                dataList.add(MusicData(title, artist, duration, musicUri, albumUri))
                 musicAdapter.notifyItemInserted(musicAdapter.itemCount)
             }
         }
@@ -153,24 +276,73 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView() {
-        val dividerItemDecoration = DividerItemDecoration(
-            recyclerView.context,
-            LinearLayoutManager(this).orientation
-        )
+    private fun setNowPlaying(musicData: MusicData) {
+        val albumArt = getAlbumArt(this@MainActivity, resources, musicData.albumUri.toUri())
+        nowAlbumArtImage.setImageDrawable(albumArt)
 
-        musicAdapter.dataList = dataList
-        recyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(context)
-            adapter = musicAdapter
-            addItemDecoration(dividerItemDecoration)
+        nowTitleTextView.text = musicData.title
+        nowArtistTextView.text = musicData.artist
+
+        when (isBinding) {
+            true -> musicService.startMusic(musicData)
+            else -> initService()
+        }
+        initPlayPauseButton()
+        waitUntilMusicEnd()
+    }
+
+    private fun waitUntilMusicEnd() {
+        val seconds =
+            TimeUnit.MILLISECONDS.toSeconds(musicService.nowMusic.duration) - musicService.getCurrentPosition()
+
+        if (job != null && job!!.isActive) {
+            job!!.cancel()
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkPermission()
+        job = CoroutineScope(Dispatchers.Main).launch {
+            repeat(seconds.toInt() + 1) {
+                delay(1000)
+            }
+            initPlayPauseButton()
+        }
+    }
+
+    private fun getAlbumArt(context: Context, resources: Resources, albumUri: Uri): Drawable? {
+        var inputStream: InputStream? = null
+        val albumArt: Drawable? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            try {
+                BitmapDrawable(
+                    resources,
+                    context.contentResolver.loadThumbnail(albumUri, Size(500, 500), null)
+                )
+            } catch (e: FileNotFoundException) {
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_no_album_art, null)
+            }
         } else {
-            getAudioFile()
+            try {
+                inputStream = context.contentResolver.openInputStream(albumUri)
+                val option = BitmapFactory.Options()
+                option.outWidth = 500
+                option.outHeight = 500
+                option.inSampleSize = 2
+                BitmapDrawable(resources, BitmapFactory.decodeStream(inputStream, null, option))
+            } catch (e: FileNotFoundException) {
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_no_album_art, null)
+            }
         }
+        inputStream?.close()
+
+        return albumArt
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job?.cancel()
+        if (isBinding)
+            if (!musicService.isPlaying()) {
+                musicService.killService()
+            }
+        unbindService(connectionResult)
+        isBinding = false
     }
 }

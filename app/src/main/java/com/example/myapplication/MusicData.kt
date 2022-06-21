@@ -1,3 +1,9 @@
 package com.example.myapplication
 
-data class MusicData(var title: String, var artist: String, var duration: Long, var albumUri: String)
+data class MusicData(
+    val title: String,
+    val artist: String,
+    val duration: Long,
+    val musicUri: String,
+    val albumUri: String
+)

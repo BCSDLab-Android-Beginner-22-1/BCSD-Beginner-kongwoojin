@@ -10,7 +10,7 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/now_playing_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -52,5 +52,66 @@
             android:text="@string/open_settings" />
 
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/now_playing_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/recycler_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/now_album_art_image"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:layout_margin="10sp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_no_album_art"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/now_title_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Title"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/now_artist_text_view"
+            app:layout_constraintEnd_toStartOf="@id/play_pause_button"
+            app:layout_constraintStart_toEndOf="@id/now_album_art_image"
+            app:layout_constraintTop_toTopOf="@id/now_album_art_image" />
+
+        <TextView
+            android:id="@+id/now_artist_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="artist"
+            app:layout_constraintBottom_toBottomOf="@id/now_album_art_image"
+            app:layout_constraintEnd_toStartOf="@id/play_pause_button"
+            app:layout_constraintStart_toStartOf="@id/now_title_text_view"
+            app:layout_constraintTop_toBottomOf="@id/now_title_text_view" />
+
+        <ImageButton
+            android:id="@+id/play_pause_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_play"
+            app:layout_constraintBottom_toBottomOf="@id/now_album_art_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/now_title_text_view" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
