@@ -136,6 +136,10 @@ class MusicService : Service() {
         }
     }
 
+    fun updatePosition(seconds: Int) {
+        mediaPlayer.seekTo(seconds * 1000)
+    }
+
     private fun waitUntilMusicEnd(duration: Long) {
         val seconds = TimeUnit.MILLISECONDS.toSeconds(duration)
 
