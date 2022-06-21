@@ -117,13 +117,22 @@ class MusicService : Service() {
     }
 
     fun isPlaying(): Boolean {
-        return !(!this::mediaPlayer.isInitialized || !mediaPlayer.isPlaying)
+        return if (isMediaPlayerInitialized())
+            mediaPlayer.isPlaying
+        else
+            false
+    }
+
+    private fun isMediaPlayerInitialized(): Boolean {
+        return this::mediaPlayer.isInitialized
     }
 
     fun playPauseMusic() {
-        when (isPlaying()) {
-            true -> mediaPlayer.pause()
-            else -> mediaPlayer.start()
+        if (isMediaPlayerInitialized()) {
+            when (isPlaying()) {
+                true -> mediaPlayer.pause()
+                else -> mediaPlayer.start()
+            }
         }
     }
 
