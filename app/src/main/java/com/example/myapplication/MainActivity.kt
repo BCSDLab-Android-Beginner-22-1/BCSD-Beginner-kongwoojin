@@ -148,6 +148,8 @@ class MainActivity : AppCompatActivity() {
     private fun checkIsMusicEmpty() {
         if (musicAdapter.itemCount != 0) {
             emptyTextView.visibility = View.GONE
+        } else {
+            emptyTextView.visibility = View.VISIBLE
         }
     }
 
