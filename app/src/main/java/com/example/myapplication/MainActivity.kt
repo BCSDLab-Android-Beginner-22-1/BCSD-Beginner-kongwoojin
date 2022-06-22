@@ -429,12 +429,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         job = CoroutineScope(Dispatchers.Main).launch {
-            repeat(seconds - currentPosition + 1) {
+            repeat(seconds - currentPosition) {
                 delay(1000)
                 nowSeconds++
                 expandedSeekBar.incrementProgressBy(1)
                 expandedPlayTime.text = getDuration(nowSeconds.toLong())
             }
+            delay(1000)
             initPlayPauseButton()
         }
     }

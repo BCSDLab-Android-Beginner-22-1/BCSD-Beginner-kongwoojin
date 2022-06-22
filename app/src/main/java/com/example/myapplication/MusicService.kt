@@ -148,9 +148,10 @@ class MusicService : Service() {
         }
 
         job = CoroutineScope(Dispatchers.Main).launch {
-            repeat(seconds.toInt() + 1) {
+            repeat(seconds.toInt()) {
                 delay(1000)
             }
+            delay(1000)
             if (!isPlaying()) {
                 killService()
             }
