@@ -330,11 +330,13 @@ class MainActivity : AppCompatActivity() {
     private fun showPermissionSettingsButton() {
         recyclerView.visibility = View.GONE
         emptyTextView.visibility = View.GONE
+        nowPlayingLayout.visibility = View.GONE
         permissionLayout.visibility = View.VISIBLE
     }
 
     private fun hidePermissionSettingsButton() {
         recyclerView.visibility = View.VISIBLE
+        nowPlayingLayout.visibility = View.VISIBLE
         permissionLayout.visibility = View.GONE
     }
 
