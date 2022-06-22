@@ -2,10 +2,7 @@ package com.example.myapplication
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
+import android.content.*
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -30,6 +27,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +35,7 @@ import kotlinx.coroutines.*
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
+
 
 class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
@@ -73,6 +72,12 @@ class MainActivity : AppCompatActivity() {
             val binder = service as MusicService.MusicBinder
             musicService = binder.getService()
             isBinding = true
+            initMusicView()
+        }
+    }
+
+    private val playStateBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
             initMusicView()
         }
     }
@@ -217,6 +222,7 @@ class MainActivity : AppCompatActivity() {
                     waitUntilMusicEnd()
             }
         })
+        LocalBroadcastManager.getInstance(this).registerReceiver(playStateBroadcastReceiver, IntentFilter("playState"))
     }
 
     private fun initService() {
@@ -247,7 +253,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initMusicView() {
-        if (musicService.isPlaying()) {
+        if (musicService.isPlaying() || musicService.isPaused()) {
             waitUntilMusicEnd()
             val nowMusic = musicService.nowMusic
 
@@ -260,6 +266,8 @@ class MainActivity : AppCompatActivity() {
             nowArtistTextView.text = nowMusic.artist
             expandedArtistTextView.text = nowMusic.artist
 
+            expandedPlayTime.text = getDuration(TimeUnit.MILLISECONDS.toSeconds(musicService.getCurrentPosition()
+                .toLong()))
             expandedMusicTime.text = getDuration(TimeUnit.MILLISECONDS.toSeconds(nowMusic.duration))
 
             initPlayPauseButton()
@@ -485,6 +493,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(playStateBroadcastReceiver)
         job?.cancel()
         if (isBinding)
             if (!musicService.isPlaying()) {

@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.AudioManager
+import android.media.AudioManager.OnAudioFocusChangeListener
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Binder
@@ -23,10 +24,12 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.coroutines.*
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
+
 
 class MusicService : Service() {
 
@@ -40,7 +43,21 @@ class MusicService : Service() {
     var job: Job? = null
     lateinit var nowMusic: MusicData
 
+    private val audioFocusChangeListener =
+        OnAudioFocusChangeListener {
+            playPauseMusic()
+            val intent = Intent("playState")
+
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        }
+
     override fun onBind(intent: Intent): IBinder {
+        val audioManager = this.getSystemService(AUDIO_SERVICE) as AudioManager
+        audioManager.requestAudioFocus(
+            audioFocusChangeListener,
+            AudioManager.STREAM_MUSIC,
+            AudioManager.AUDIOFOCUS_GAIN
+        )
         return binder
     }
 
@@ -123,6 +140,14 @@ class MusicService : Service() {
             false
     }
 
+    fun isPaused(): Boolean {
+        return if (isMediaPlayerInitialized())
+            mediaPlayer.currentPosition != 0
+        else
+            false
+    }
+
+
     private fun isMediaPlayerInitialized(): Boolean {
         return this::mediaPlayer.isInitialized
     }
@@ -159,6 +184,9 @@ class MusicService : Service() {
     }
 
     fun killService() {
+        val audioManager = this.getSystemService(AUDIO_SERVICE) as AudioManager
+        audioManager.abandonAudioFocus(audioFocusChangeListener)
+
         stopForeground(true)
         stopSelf()
     }
