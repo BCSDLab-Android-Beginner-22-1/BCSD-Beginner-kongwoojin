@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             val binder = service as MusicService.MusicBinder
             musicService = binder.getService()
             isBinding = true
-            initView()
+            initMusicView()
         }
     }
 
@@ -123,8 +123,9 @@ class MainActivity : AppCompatActivity() {
 
         val permissionSettingButton: Button = findViewById(R.id.permission_settings_button)
 
+        initView()
         when (isBinding) {
-            true -> initView()
+            true -> initMusicView()
             else -> initService()
         }
 
@@ -225,14 +226,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        if (isBinding) {
-            if (musicService.isPlaying()) {
-                initMusicView()
-                waitUntilMusicEnd()
-            }
-            initPlayPauseButton()
-        }
-
         val dividerItemDecoration = DividerItemDecoration(
             recyclerView.context,
             LinearLayoutManager(this).orientation
@@ -254,18 +247,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initMusicView() {
-        val nowMusic = musicService.nowMusic
+        if (musicService.isPlaying()) {
+            waitUntilMusicEnd()
+            val nowMusic = musicService.nowMusic
 
-        val albumArt = getAlbumArt(this@MainActivity, resources, nowMusic.albumUri.toUri())
-        nowAlbumArtImage.setImageDrawable(albumArt)
-        expandedAlbumArtImage.setImageDrawable(albumArt)
+            val albumArt = getAlbumArt(this@MainActivity, resources, nowMusic.albumUri.toUri())
+            nowAlbumArtImage.setImageDrawable(albumArt)
+            expandedAlbumArtImage.setImageDrawable(albumArt)
 
-        nowTitleTextView.text = nowMusic.title
-        expandedTitleTextView.text = nowMusic.title
-        nowArtistTextView.text = nowMusic.artist
-        expandedArtistTextView.text = nowMusic.artist
+            nowTitleTextView.text = nowMusic.title
+            expandedTitleTextView.text = nowMusic.title
+            nowArtistTextView.text = nowMusic.artist
+            expandedArtistTextView.text = nowMusic.artist
 
-        expandedMusicTime.text = getDuration(TimeUnit.MILLISECONDS.toSeconds(nowMusic.duration))
+            expandedMusicTime.text = getDuration(TimeUnit.MILLISECONDS.toSeconds(nowMusic.duration))
+
+            initPlayPauseButton()
+        }
     }
 
     private fun initPlayPauseButton() {
