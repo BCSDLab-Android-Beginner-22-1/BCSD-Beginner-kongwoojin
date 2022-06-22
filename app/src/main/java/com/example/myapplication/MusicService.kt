@@ -57,8 +57,8 @@ class MusicService : Service() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "MusicService"
-            val descriptionText = "MusicService"
+            val name = getString(R.string.notification_channel_name)
+            val descriptionText = getString(R.string.notification_channel_desc)
             val importance = NotificationManager.IMPORTANCE_LOW
             val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
                 description = descriptionText
