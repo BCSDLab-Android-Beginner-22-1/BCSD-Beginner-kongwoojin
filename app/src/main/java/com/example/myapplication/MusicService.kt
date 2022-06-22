@@ -124,7 +124,7 @@ class MusicService : Service() {
             prepare()
             start()
         }
-        waitUntilMusicEnd(musicData.duration)
+        waitUntilMusicEnd()
     }
 
     private fun stopMusic() {
@@ -163,20 +163,22 @@ class MusicService : Service() {
 
     fun updatePosition(seconds: Int) {
         mediaPlayer.seekTo(seconds * 1000)
+        waitUntilMusicEnd()
     }
 
-    private fun waitUntilMusicEnd(duration: Long) {
-        val seconds = TimeUnit.MILLISECONDS.toSeconds(duration)
+    private fun waitUntilMusicEnd() {
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(nowMusic.duration)
+        val currentPosition = getCurrentPosition() / 1000
 
         if (job != null && job!!.isActive) {
             job!!.cancel()
         }
 
         job = CoroutineScope(Dispatchers.Main).launch {
-            repeat(seconds.toInt()) {
+            repeat(seconds.toInt() - currentPosition) {
                 delay(1000)
             }
-            delay(1000)
+            delay(2000)
             if (!isPlaying()) {
                 killService()
             }
