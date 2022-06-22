@@ -168,7 +168,6 @@ class MainActivity : AppCompatActivity() {
 
             expandedLayout.animation = animSlideUp
             expandedLayout.visibility = View.VISIBLE
-            nowPlayingLayout.visibility = View.GONE
 
             isSlideUp = true
         }
@@ -199,7 +198,6 @@ class MainActivity : AppCompatActivity() {
 
             expandedLayout.animation = animSlideDown
             expandedLayout.visibility = View.GONE
-            nowPlayingLayout.visibility = View.VISIBLE
             isSlideUp = false
         }
 
