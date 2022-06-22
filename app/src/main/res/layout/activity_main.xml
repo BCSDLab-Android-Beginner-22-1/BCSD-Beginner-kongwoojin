@@ -127,6 +127,7 @@
 
         <TextView
             android:id="@+id/expanded_title_text_view"
+            style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10sp"
@@ -134,7 +135,6 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/title_placeholder"
-            style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
             app:layout_constraintBottom_toTopOf="@id/expanded_artist_text_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -143,12 +143,12 @@
 
         <TextView
             android:id="@+id/expanded_artist_text_view"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@string/artist_placeholder"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
             app:layout_constraintBottom_toTopOf="@id/expanded_album_art_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -186,6 +186,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:max="0"
             app:layout_constraintBottom_toTopOf="@id/expanded_play_time"
             app:layout_constraintEnd_toEndOf="@id/expanded_music_time"
             app:layout_constraintStart_toStartOf="@id/expanded_play_time" />
