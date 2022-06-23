@@ -448,7 +448,7 @@ class MainActivity : AppCompatActivity() {
                 expandedSeekBar.incrementProgressBy(1)
                 expandedPlayTime.text = getDuration(nowSeconds.toLong())
             }
-            delay(1000)
+            initPlayPauseButton(false)
         }
     }
 
