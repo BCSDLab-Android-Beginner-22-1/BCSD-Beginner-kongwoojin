@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import java.io.FileNotFoundException
 import java.io.InputStream
@@ -106,9 +107,4 @@ class MusicAdapter : RecyclerView.Adapter<MusicAdapter.ViewHolder>() {
             }
         }
     }
-
-    fun String.toUri(): Uri {
-        return Uri.parse(this)
-    }
-
 }
