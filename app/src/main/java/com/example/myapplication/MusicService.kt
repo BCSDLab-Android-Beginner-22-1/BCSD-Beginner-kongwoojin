@@ -105,7 +105,7 @@ class MusicService : Service() {
             .setContentTitle(musicData.title)
             .setContentText(musicData.artist)
             .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT) // Need for api <= 25
+            .setPriority(NotificationCompat.PRIORITY_LOW) // Need for api <= 25
             .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(this)) {
