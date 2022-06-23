@@ -24,7 +24,6 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.coroutines.*
 import java.io.FileNotFoundException
 import java.io.InputStream
@@ -42,13 +41,12 @@ class MusicService : Service() {
     private lateinit var mediaPlayer: MediaPlayer
     var job: Job? = null
     lateinit var nowMusic: MusicData
+    lateinit var onMediaStateChangeListener: OnMediaStateChangeListener
 
     private val audioFocusChangeListener =
         OnAudioFocusChangeListener {
             playPauseMusic()
-            val intent = Intent("playState")
-
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+            onMediaStateChangeListener.onMediaStateChange(false)
         }
 
     override fun onBind(intent: Intent): IBinder {
@@ -124,6 +122,7 @@ class MusicService : Service() {
             prepare()
             start()
         }
+        onMediaStateChangeListener.onMediaStateChange(true)
         waitUntilMusicEnd()
     }
 
@@ -155,9 +154,14 @@ class MusicService : Service() {
     fun playPauseMusic() {
         if (isMediaPlayerInitialized()) {
             when (isPlaying()) {
-                true -> mediaPlayer.pause()
-                else -> mediaPlayer.start()
+                true -> {
+                    mediaPlayer.pause()
+                }
+                else -> {
+                    mediaPlayer.start()
+                }
             }
+            onMediaStateChangeListener.onMediaStateChange(isPlaying())
         }
     }
 
@@ -223,5 +227,13 @@ class MusicService : Service() {
         inputStream?.close()
 
         return albumArt!!.toBitmap()
+    }
+
+    fun setMediaStateChangeListener(onMediaStateChangeListener: OnMediaStateChangeListener) {
+        this.onMediaStateChangeListener = onMediaStateChangeListener
+    }
+
+    interface OnMediaStateChangeListener {
+        fun onMediaStateChange(isPlaying: Boolean)
     }
 }

@@ -27,7 +27,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -72,12 +71,6 @@ class MainActivity : AppCompatActivity() {
             val binder = service as MusicService.MusicBinder
             musicService = binder.getService()
             isBinding = true
-            initMusicView()
-        }
-    }
-
-    private val playStateBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
             initMusicView()
         }
     }
@@ -141,14 +134,12 @@ class MainActivity : AppCompatActivity() {
         playPauseButton.setOnClickListener {
             if (isBinding) {
                 musicService.playPauseMusic()
-                initPlayPauseButton()
             }
         }
 
         expandedPlayPauseButton.setOnClickListener {
             if (isBinding) {
                 musicService.playPauseMusic()
-                initPlayPauseButton()
             }
         }
 
@@ -220,7 +211,6 @@ class MainActivity : AppCompatActivity() {
                     waitUntilMusicEnd()
             }
         })
-        LocalBroadcastManager.getInstance(this).registerReceiver(playStateBroadcastReceiver, IntentFilter("playState"))
     }
 
     private fun initService() {
@@ -264,47 +254,59 @@ class MainActivity : AppCompatActivity() {
             nowArtistTextView.text = nowMusic.artist
             expandedArtistTextView.text = nowMusic.artist
 
-            expandedPlayTime.text = getDuration(TimeUnit.MILLISECONDS.toSeconds(musicService.getCurrentPosition()
-                .toLong()))
+            expandedPlayTime.text = getDuration(
+                TimeUnit.MILLISECONDS.toSeconds(
+                    musicService.getCurrentPosition()
+                        .toLong()
+                )
+            )
             expandedMusicTime.text = getDuration(TimeUnit.MILLISECONDS.toSeconds(nowMusic.duration))
-
-            initPlayPauseButton()
         }
+
+        initCallback()
     }
 
-    private fun initPlayPauseButton() {
-        when (musicService.isPlaying()) {
-            true -> {
-                playPauseButton.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        this,
-                        R.drawable.ic_pause
-                    )
-                )
-                expandedPlayPauseButton.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        this,
-                        R.drawable.ic_pause
-                    )
-                )
-                waitUntilMusicEnd()
-            }
-            else -> {
-                playPauseButton.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        this,
-                        R.drawable.ic_play
-                    )
-                )
-                expandedPlayPauseButton.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        this,
-                        R.drawable.ic_play
-                    )
-                )
-                job?.cancel()
+    private fun initCallback() {
+        val mediaStateChangeListener: MusicService.OnMediaStateChangeListener = object :
+            MusicService.OnMediaStateChangeListener {
+            override fun onMediaStateChange(isPlaying: Boolean) {
+                when (isPlaying) {
+                    true -> {
+                        playPauseButton.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                this@MainActivity,
+                                R.drawable.ic_pause
+                            )
+                        )
+                        expandedPlayPauseButton.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                this@MainActivity,
+                                R.drawable.ic_pause
+                            )
+                        )
+                        waitUntilMusicEnd()
+                    }
+                    else -> {
+                        playPauseButton.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                this@MainActivity,
+                                R.drawable.ic_play
+                            )
+                        )
+                        expandedPlayPauseButton.setImageDrawable(
+                            AppCompatResources.getDrawable(
+                                this@MainActivity,
+                                R.drawable.ic_play
+                            )
+                        )
+                        job?.cancel()
+                    }
+                }
+
             }
         }
+
+        musicService.setMediaStateChangeListener(mediaStateChangeListener)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -413,7 +415,6 @@ class MainActivity : AppCompatActivity() {
             else -> initService()
         }
         initMusicView()
-        initPlayPauseButton()
         waitUntilMusicEnd()
     }
 
@@ -442,7 +443,6 @@ class MainActivity : AppCompatActivity() {
                 expandedPlayTime.text = getDuration(nowSeconds.toLong())
             }
             delay(1000)
-            initPlayPauseButton()
         }
     }
 
@@ -491,7 +491,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(playStateBroadcastReceiver)
         job?.cancel()
         if (isBinding)
             if (!musicService.isPlaying()) {
