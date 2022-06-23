@@ -2,7 +2,10 @@ package com.example.myapplication
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.*
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -171,7 +174,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         expandedLayout.setOnTouchListener { v, event ->
-            if (event.action == MotionEvent.ACTION_DOWN) {
+            if (event.action == MotionEvent.ACTION_UP) {
                 v.performClick()
             }
             true
