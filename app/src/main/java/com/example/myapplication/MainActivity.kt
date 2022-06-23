@@ -264,49 +264,52 @@ class MainActivity : AppCompatActivity() {
         }
 
         initCallback()
+        initPlayPauseButton(musicService.isPlaying())
     }
 
     private fun initCallback() {
         val mediaStateChangeListener: MusicService.OnMediaStateChangeListener = object :
             MusicService.OnMediaStateChangeListener {
             override fun onMediaStateChange(isPlaying: Boolean) {
-                when (isPlaying) {
-                    true -> {
-                        playPauseButton.setImageDrawable(
-                            AppCompatResources.getDrawable(
-                                this@MainActivity,
-                                R.drawable.ic_pause
-                            )
-                        )
-                        expandedPlayPauseButton.setImageDrawable(
-                            AppCompatResources.getDrawable(
-                                this@MainActivity,
-                                R.drawable.ic_pause
-                            )
-                        )
-                        waitUntilMusicEnd()
-                    }
-                    else -> {
-                        playPauseButton.setImageDrawable(
-                            AppCompatResources.getDrawable(
-                                this@MainActivity,
-                                R.drawable.ic_play
-                            )
-                        )
-                        expandedPlayPauseButton.setImageDrawable(
-                            AppCompatResources.getDrawable(
-                                this@MainActivity,
-                                R.drawable.ic_play
-                            )
-                        )
-                        job?.cancel()
-                    }
-                }
-
+                initPlayPauseButton(isPlaying)
             }
         }
-
         musicService.setMediaStateChangeListener(mediaStateChangeListener)
+    }
+
+    fun initPlayPauseButton(isPlaying: Boolean) {
+        when (isPlaying) {
+            true -> {
+                playPauseButton.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        this@MainActivity,
+                        R.drawable.ic_pause
+                    )
+                )
+                expandedPlayPauseButton.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        this@MainActivity,
+                        R.drawable.ic_pause
+                    )
+                )
+                waitUntilMusicEnd()
+            }
+            else -> {
+                playPauseButton.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        this@MainActivity,
+                        R.drawable.ic_play
+                    )
+                )
+                expandedPlayPauseButton.setImageDrawable(
+                    AppCompatResources.getDrawable(
+                        this@MainActivity,
+                        R.drawable.ic_play
+                    )
+                )
+                job?.cancel()
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
