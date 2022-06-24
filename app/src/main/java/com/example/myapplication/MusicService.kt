@@ -137,7 +137,9 @@ class MusicService : Service() {
             stopMusic()
         createNotification(musicData)
         mediaPlayer = MediaPlayer().apply {
-            setAudioStreamType(AudioManager.STREAM_MUSIC)
+            setAudioAttributes(
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+            )
             setDataSource(applicationContext, musicData.musicUri.toUri())
             prepare()
             start()
