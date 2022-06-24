@@ -42,14 +42,14 @@ class MusicService : Service() {
     private lateinit var mediaPlayer: MediaPlayer
     var job: Job? = null
     lateinit var nowMusic: MusicData
-    lateinit var onMediaStateChangeListener: OnMediaStateChangeListener
+    lateinit var onMediaStateChangeCallback: OnMediaStateChangeCallback
 
     lateinit var audioFocusRequest: AudioFocusRequest
 
     private val audioFocusChangeListener =
         OnAudioFocusChangeListener {
             playPauseMusic()
-            onMediaStateChangeListener.onMediaStateChange(false)
+            onMediaStateChangeCallback.onMediaStateChange(false)
         }
 
     override fun onBind(intent: Intent): IBinder {
@@ -144,7 +144,7 @@ class MusicService : Service() {
             prepare()
             start()
         }
-        onMediaStateChangeListener.onMediaStateChange(true)
+        onMediaStateChangeCallback.onMediaStateChange(true)
         waitUntilMusicEnd()
     }
 
@@ -183,7 +183,7 @@ class MusicService : Service() {
                     mediaPlayer.start()
                 }
             }
-            onMediaStateChangeListener.onMediaStateChange(isPlaying())
+            onMediaStateChangeCallback.onMediaStateChange(isPlaying())
         }
     }
 
@@ -256,11 +256,11 @@ class MusicService : Service() {
         return albumArt!!.toBitmap()
     }
 
-    fun setMediaStateChangeListener(onMediaStateChangeListener: OnMediaStateChangeListener) {
-        this.onMediaStateChangeListener = onMediaStateChangeListener
+    fun setMediaStateChangeCallback(onMediaStateChangeCallback: OnMediaStateChangeCallback) {
+        this.onMediaStateChangeCallback = onMediaStateChangeCallback
     }
 
-    interface OnMediaStateChangeListener {
+    interface OnMediaStateChangeCallback {
         fun onMediaStateChange(isPlaying: Boolean)
     }
 }

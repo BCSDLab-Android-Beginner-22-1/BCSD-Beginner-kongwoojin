@@ -271,13 +271,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initCallback() {
-        val mediaStateChangeListener: MusicService.OnMediaStateChangeListener = object :
-            MusicService.OnMediaStateChangeListener {
+        val mediaStateChangeCallback = object : MusicService.OnMediaStateChangeCallback {
             override fun onMediaStateChange(isPlaying: Boolean) {
                 initPlayPauseButton(isPlaying)
             }
         }
-        musicService.setMediaStateChangeListener(mediaStateChangeListener)
+        musicService.setMediaStateChangeCallback(mediaStateChangeCallback)
     }
 
     fun initPlayPauseButton(isPlaying: Boolean) {
