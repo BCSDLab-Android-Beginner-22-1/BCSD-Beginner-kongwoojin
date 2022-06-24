@@ -11,6 +11,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.AudioManager.OnAudioFocusChangeListener
 import android.media.MediaPlayer
@@ -29,7 +31,6 @@ import java.io.FileNotFoundException
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
 
-
 class MusicService : Service() {
 
     companion object {
@@ -42,6 +43,8 @@ class MusicService : Service() {
     var job: Job? = null
     lateinit var nowMusic: MusicData
     lateinit var onMediaStateChangeListener: OnMediaStateChangeListener
+
+    lateinit var audioFocusRequest: AudioFocusRequest
 
     private val audioFocusChangeListener =
         OnAudioFocusChangeListener {
@@ -56,13 +59,27 @@ class MusicService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         createNotificationChannel()
 
-        val audioManager = this.getSystemService(AUDIO_SERVICE) as AudioManager
-        audioManager.requestAudioFocus(
-            audioFocusChangeListener,
-            AudioManager.STREAM_MUSIC,
-            AudioManager.AUDIOFOCUS_GAIN
-        )
+        val audioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
+                )
+                .setAcceptsDelayedFocusGain(true)
+                .setOnAudioFocusChangeListener(audioFocusChangeListener)
+                .build()
+            audioManager.requestAudioFocus(audioFocusRequest)
+        } else {
+            audioManager.requestAudioFocus(
+                audioFocusChangeListener,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN
+            )
+        }
         return START_STICKY
     }
 
@@ -194,7 +211,12 @@ class MusicService : Service() {
 
     fun killService() {
         val audioManager = this.getSystemService(AUDIO_SERVICE) as AudioManager
-        audioManager.abandonAudioFocus(audioFocusChangeListener)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioManager.abandonAudioFocusRequest(audioFocusRequest)
+        } else {
+            audioManager.abandonAudioFocus(audioFocusChangeListener)
+        }
 
         stopForeground(true)
         stopSelf()
