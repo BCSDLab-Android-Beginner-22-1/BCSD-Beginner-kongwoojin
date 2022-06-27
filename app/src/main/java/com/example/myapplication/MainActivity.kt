@@ -136,13 +136,21 @@ class MainActivity : AppCompatActivity() {
 
         playPauseButton.setOnClickListener {
             if (isBinding) {
-                musicService.playPauseMusic()
+                if (expandedSeekBar.progress == expandedSeekBar.max) {
+                    musicService.startMusic(musicService.nowMusic)
+                } else {
+                    musicService.playPauseMusic()
+                }
             }
         }
 
         expandedPlayPauseButton.setOnClickListener {
             if (isBinding) {
-                musicService.playPauseMusic()
+                if (expandedSeekBar.progress == expandedSeekBar.max) {
+                    musicService.startMusic(musicService.nowMusic)
+                } else {
+                    musicService.playPauseMusic()
+                }
             }
         }
 
