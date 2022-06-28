@@ -26,10 +26,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.net.toUri
-import kotlinx.coroutines.*
 import java.io.FileNotFoundException
 import java.io.InputStream
-import java.util.concurrent.TimeUnit
 
 class MusicService : Service() {
 
@@ -40,7 +38,6 @@ class MusicService : Service() {
 
     private val binder = MusicBinder()
     private lateinit var mediaPlayer: MediaPlayer
-    var job: Job? = null
     lateinit var nowMusic: MusicData
     lateinit var onMediaStateChangeCallback: OnMediaStateChangeCallback
 
@@ -144,8 +141,11 @@ class MusicService : Service() {
             prepare()
             start()
         }
+        mediaPlayer.setOnCompletionListener {
+            onMediaStateChangeCallback.mediaPlayEnd()
+            killService()
+        }
         onMediaStateChangeCallback.onMediaStateChange(true)
-        waitUntilMusicEnd()
     }
 
     private fun stopMusic() {
@@ -189,26 +189,6 @@ class MusicService : Service() {
 
     fun updatePosition(seconds: Int) {
         mediaPlayer.seekTo(seconds * 1000)
-        waitUntilMusicEnd()
-    }
-
-    private fun waitUntilMusicEnd() {
-        val seconds = TimeUnit.MILLISECONDS.toSeconds(nowMusic.duration)
-        val currentPosition = getCurrentPosition() / 1000
-
-        if (job != null && job!!.isActive) {
-            job!!.cancel()
-        }
-
-        job = CoroutineScope(Dispatchers.Main).launch {
-            repeat(seconds.toInt() - currentPosition) {
-                delay(1000)
-            }
-            delay(2000)
-            if (!isPlaying()) {
-                killService()
-            }
-        }
     }
 
     fun killService() {
@@ -258,9 +238,11 @@ class MusicService : Service() {
 
     fun setMediaStateChangeCallback(onMediaStateChangeCallback: OnMediaStateChangeCallback) {
         this.onMediaStateChangeCallback = onMediaStateChangeCallback
+
     }
 
     interface OnMediaStateChangeCallback {
         fun onMediaStateChange(isPlaying: Boolean)
+        fun mediaPlayEnd()
     }
 }

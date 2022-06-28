@@ -283,6 +283,10 @@ class MainActivity : AppCompatActivity() {
             override fun onMediaStateChange(isPlaying: Boolean) {
                 initPlayPauseButton(isPlaying)
             }
+
+            override fun mediaPlayEnd() {
+                initPlayPauseButton(false)
+            }
         }
         musicService.setMediaStateChangeCallback(mediaStateChangeCallback)
     }
@@ -455,7 +459,6 @@ class MainActivity : AppCompatActivity() {
                 expandedSeekBar.incrementProgressBy(1)
                 expandedPlayTime.text = getDuration(nowSeconds.toLong())
             }
-            initPlayPauseButton(false)
         }
     }
 
