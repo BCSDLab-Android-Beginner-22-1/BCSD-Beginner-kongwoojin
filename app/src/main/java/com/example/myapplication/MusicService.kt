@@ -138,9 +138,14 @@ class MusicService : Service() {
                 AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
             )
             setDataSource(applicationContext, musicData.musicUri.toUri())
-            prepare()
-            start()
+            prepareAsync()
         }
+
+        mediaPlayer.setOnPreparedListener {
+            mediaPlayer.start()
+            onMediaStateChangeCallback.mediaPlayStart()
+        }
+
         mediaPlayer.setOnCompletionListener {
             onMediaStateChangeCallback.mediaPlayEnd()
             killService()
@@ -244,5 +249,6 @@ class MusicService : Service() {
     interface OnMediaStateChangeCallback {
         fun onMediaStateChange(isPlaying: Boolean)
         fun mediaPlayEnd()
+        fun mediaPlayStart()
     }
 }

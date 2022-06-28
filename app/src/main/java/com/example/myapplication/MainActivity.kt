@@ -287,6 +287,11 @@ class MainActivity : AppCompatActivity() {
             override fun mediaPlayEnd() {
                 initPlayPauseButton(false)
             }
+
+            override fun mediaPlayStart() {
+                initMusicView()
+                waitUntilMusicEnd()
+            }
         }
         musicService.setMediaStateChangeCallback(mediaStateChangeCallback)
     }
@@ -431,8 +436,6 @@ class MainActivity : AppCompatActivity() {
             true -> musicService.startMusic(musicData)
             else -> initService()
         }
-        initMusicView()
-        waitUntilMusicEnd()
     }
 
     private fun setMusicPosition(seconds: Int) {
