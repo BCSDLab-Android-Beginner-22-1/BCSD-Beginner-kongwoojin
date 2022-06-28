@@ -84,10 +84,11 @@ class MainActivity : AppCompatActivity() {
         isTimerRunning = true
 
         var delayTime = 10L
-        var prevSystemMillis = System.currentTimeMillis()
+        var prevSystemMillis: Long
         var curSystemMillis: Long
         var timeError: Long
         job = CoroutineScope(Dispatchers.Main).launch {
+            prevSystemMillis = System.currentTimeMillis()
             while (true) {
                 delay(delayTime)
 
