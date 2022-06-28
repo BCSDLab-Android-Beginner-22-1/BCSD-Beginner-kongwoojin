@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -62,7 +61,6 @@ class MainActivity : AppCompatActivity() {
             if (isTimerRunning) {
                 lapList.add(0, LapTime(lapItemCount, time))
                 lapItemCount++
-                Log.d("Test", lapItemCount.toString())
                 lapTimeAdapter.notifyItemInserted(0)
                 recyclerView.scrollToPosition(0)
             }
