@@ -9,13 +9,6 @@
             name="article"
             type="com.example.myapplication.Article" />
 
-        <variable
-            name="adapter"
-            type="com.example.myapplication.BoardAdapter" />
-
-        <variable
-            name="position"
-            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,8 +24,8 @@
             android:singleLine="true"
             android:text="@{article.title}"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/item_writer"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

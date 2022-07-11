@@ -17,17 +17,15 @@ class BoardAdapter : RecyclerView.Adapter<BoardAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(this@BoardAdapter, articleData[position], position)
+        holder.bind(articleData[position], position)
     }
 
     override fun getItemCount(): Int = articleData.size
 
     class ViewHolder(private val binding: ItemArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(boardAdapter: BoardAdapter, article: Article, position: Int) {
-            binding.adapter = boardAdapter
+        fun bind(article: Article, position: Int) {
             binding.article = article
-            binding.position = position
 
             binding.item.setOnClickListener {
                 val intent = Intent(binding.root.context, WriteActivity::class.java)

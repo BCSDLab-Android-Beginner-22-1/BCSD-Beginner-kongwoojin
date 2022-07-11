@@ -12,9 +12,6 @@
             name="article"
             type="com.example.myapplication.Article" />
 
-        <variable
-            name="vm"
-            type="com.example.myapplication.ViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
