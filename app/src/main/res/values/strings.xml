@@ -7,4 +7,14 @@
     <string name="menu_add">Add</string>
 
     <string name="write">Write</string>
+
+    <string name="add_image">Add image</string>
+    <string name="change_image">Change image</string>
+    <string name="delete_image">Delete image</string>
+
+    <string name="dialog_permission_title">Permission Required!</string>
+    <string name="dialog_permission_messsage">Press OK to allow permission!</string>
+    <string name="dialog_permission_ok">OK</string>
+    <string name="dialog_permission_cancel">Cancel</string>
+    <string name="permission_needed">Allow permission to show files</string>
 </resources>

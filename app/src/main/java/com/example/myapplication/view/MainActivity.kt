@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,16 +7,19 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myapplication.R
+import com.example.myapplication.adapter.BoardAdapter
 import com.example.myapplication.databinding.ActivityMainBinding
+import com.example.myapplication.viewmodel.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val boardAdapter = BoardAdapter()
-    private lateinit var viewModel: ViewModel
+    private val mainViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,12 +37,17 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(dividerItemDecoration)
         }
 
-        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
+        boardAdapter.setOnClickListener {
+            val intent = Intent(this, WriteActivity::class.java)
+            intent.putExtra("position", it)
+            startActivity(intent)
+        }
 
-        val viewModelSingleton = ViewModelSingleton
-        viewModelSingleton.viewModel = viewModel
+        boardAdapter.setOnLongClickListener {
+            mainViewModel.removeData(it)
+        }
 
-        binding.vm = viewModel
+        binding.vm = mainViewModel
         binding.lifecycleOwner = this
     }
 
@@ -58,5 +66,10 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mainViewModel.reloadData()
     }
 }

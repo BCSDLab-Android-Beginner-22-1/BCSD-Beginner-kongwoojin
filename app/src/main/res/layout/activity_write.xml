@@ -6,11 +6,13 @@
 
         <variable
             name="activity"
-            type="com.example.myapplication.WriteActivity" />
+            type="com.example.myapplication.view.WriteActivity" />
 
         <variable
-            name="article"
-            type="com.example.myapplication.Article" />
+            name="vm"
+            type="com.example.myapplication.viewmodel.WriteViewModel" />
+
+        <import type="android.view.View" />
 
     </data>
 
@@ -18,14 +20,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
-        tools:context=".WriteActivity">
+        tools:context=".view.WriteActivity">
 
         <EditText
             android:id="@+id/title_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_title"
-            android:text="@={article.title}"
+            android:text="@={vm.article.title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_writer"
-            android:text="@={article.writer}"
+            android:text="@={vm.article.writer}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_edit_text" />
@@ -46,11 +48,48 @@
             android:layout_height="0dp"
             android:gravity="top"
             android:hint="@string/hint_text"
-            android:text="@={article.text}"
-            app:layout_constraintBottom_toTopOf="@id/write_button"
+            android:text="@={vm.article.text}"
+            app:layout_constraintBottom_toTopOf="@id/image_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/writer_edit_text" />
+
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:visibility="@{vm.article.imageUri == null ? View.GONE : View.VISIBLE}"
+            app:image="@{vm.article.imageUri}"
+            app:layout_constraintBottom_toTopOf="@id/image_add_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_edit_text" />
+
+        <Button
+            android:id="@+id/image_add_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:onClick="@{()->activity.getImageList()}"
+            android:text="@{vm.article.imageUri == null ? @string/add_image : @string/change_image}"
+            app:layout_constraintBottom_toTopOf="@id/write_button"
+            app:layout_constraintEnd_toStartOf="@id/image_delete_button"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_view" />
+
+        <Button
+            android:id="@+id/image_delete_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:onClick="@{()->vm.deleteImageUri()}"
+            android:text="@string/delete_image"
+            android:visibility="@{vm.article.imageUri == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toTopOf="@id/write_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_add_button"
+            app:layout_constraintTop_toBottomOf="@id/image_view" />
 
         <Button
             android:id="@+id/write_button"
@@ -61,7 +100,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_edit_text" />
+            app:layout_constraintTop_toBottomOf="@id/image_add_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
