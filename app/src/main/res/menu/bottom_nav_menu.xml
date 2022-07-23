@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_films"
+        android:icon="@drawable/ic_bottom_nav_films"
+        android:title="@string/bottom_nav_films" />
+
+    <item
+        android:id="@+id/navigation_people"
+        android:icon="@drawable/ic_bottom_nav_people"
+        android:title="@string/bottom_nav_people" />
+
+    <item
+        android:id="@+id/navigation_planets"
+        android:icon="@drawable/ic_bottom_nav_planets"
+        android:title="@string/bottom_nav_planets" />
+
+</menu>
