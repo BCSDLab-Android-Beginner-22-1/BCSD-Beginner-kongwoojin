@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="bottom_nav_films">Films</string>
+    <string name="bottom_nav_people">People</string>
+    <string name="bottom_nav_planets">Planets</string>
+
+    <string name="film_title">Episode %d: %s</string>
+    <string name="film_detail">Release date: %s / Director: %s</string>
+    <string name="film_characters_title">Characters</string>
+    <string name="film_planets_title">Planets</string>
+
+    <string name="person_info">%s (%s)</string>
+    <string name="person_detail">%scm / %skg</string>
+    <string name="person_birth_year">Birth year: %s</string>
+    <string name="person_from">From: %s</string>
+    <string name="person_films_title">Films</string>
+
+    <string name="planet_population">Population: %s</string>
+    <string name="planet_rotation_period">Rotation period: %s</string>
+    <string name="planet_orbit_period">Orbit period: %s</string>
+    <string name="planet_climate">Climate: %s</string>
+    <string name="planet_gravity">Gravity: %s</string>
+    <string name="planet_terrain">Terrain: %s</string>
+    <string name="planet_residents_title">Residents</string>
+    <string name="planet_films_title">Films</string>
 </resources>
